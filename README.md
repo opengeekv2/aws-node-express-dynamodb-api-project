@@ -86,7 +86,25 @@ If you try to retrieve user that does not exist, you should receive the followin
 
 ### Local development
 
-It is also possible to emulate DynamoDB, API Gateway and Lambda locally using the `serverless-localstack` plugin. 
+It is also possible to emulate DynamoDB, API Gateway and Lambda locally using the `serverless-localstack` plugin.
+
+To do that you will need first to [install localstack](https://docs.localstack.cloud/getting-started/installation/).
+
+After installing run it with:
+
+```bash
+localstack start
+```
+
+DynamoDB setup has been tweaked to support both environments:
+
+```js
+let dynamoConfig = {}
+if (process.env.LOCALSTACK_HOSTNAME) {
+  dynamoConfig = {endpoint: "http://" + process.env.LOCALSTACK_HOSTNAME + ":4566" }
+}
+const client = new DynamoDBClient(dynamoConfig);
+```
 
 Running the following command with start both local API Gateway emulator as well as local instance of emulated DynamoDB:
 

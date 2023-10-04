@@ -11,7 +11,11 @@ const serverless = require("serverless-http");
 const app = express();
 
 const USERS_TABLE = process.env.USERS_TABLE;
-const client = process.env.LOCALSTACK_HOSTNAME ? new DynamoDBClient({endpoint: "http://" + process.env.LOCALSTACK_HOSTNAME + ":4566" }) : new DynamoDBClient();
+let dynamoConfig = {}
+if (process.env.LOCALSTACK_HOSTNAME) {
+  dynamoConfig = {endpoint: "http://" + process.env.LOCALSTACK_HOSTNAME + ":4566" }
+}
+const client = new DynamoDBClient(dynamoConfig);
 const dynamoDbClient = DynamoDBDocumentClient.from(client);
 
 app.use(express.json());
